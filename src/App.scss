@@ -1,0 +1,99 @@
+body {
+   font-family: "Roboto", sans-serif;
+
+   div, p {
+      box-sizing: border-box;
+   }
+}
+
+.App {
+   text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.list-todos {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   gap: 30px;
+   padding-top: 30px;
+}
+
+ul {
+   list-style: none;
+   padding-left: 0;
+}
+
+.wrap-todo-list {
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   justify-content: space-between;
+   text-align: left;
+}
+
+.error {
+   border-color: red;
+   
+   &:focus {
+      border-color: red;
+      outline: red;
+   }
+
+   &-message {
+      color: red;
+   }
+}
+
+.filter-active {
+   border-color: greenyellow;
+}
+
+.is-done {
+   opacity: 1;
+}
+
+.form-add-new-todolist {
+   padding-block: 20px;
+}
+
+.wrap-title-todolist {
+   font-weight: 700;
+   font-size: 20px;
+}
