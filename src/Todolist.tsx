@@ -2,8 +2,9 @@ import { ChangeEvent } from "react";
 import { FilterValueType } from "./App";
 import AddItemForm from "./AddItemFrom";
 import EditableSpan from "./EditableSpan";
-import { Button, ButtonGroup, Checkbox, Container, IconButton, Paper } from "@mui/material";
+import { Button, ButtonGroup, Checkbox, IconButton, Paper } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 export type TaskType = {
    id: string
@@ -52,8 +53,8 @@ function TodoList(props: PropsType) {
          <li key={task.id} className={task.isDone ? 'is-done' : ''}>
             <Checkbox checked={task.isDone} onChange={changeStatusTask} />
             <EditableSpan title={task.title} changeTitle={changeTitle}/>
-            <IconButton aria-label="remove task" size="small" onClick={removeTask}>
-               <Delete fontSize="inherit" />
+            <IconButton aria-label="remove task" size="medium" onClick={removeTask}>
+               <RemoveCircleIcon fontSize="inherit" />
             </IconButton>
          </li>
       )
