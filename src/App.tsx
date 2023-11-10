@@ -18,7 +18,7 @@ export type TodoListType = {
    title: string
    filter: FilterValueType
 }
-export type ListTodoListType = {
+export type ListTasksType = {
    [key:string] : Array<TaskType>
 }
 
@@ -26,10 +26,10 @@ const idTodoList1 = v1();
 const idTodoList2 = v1();
 
 const initListTodoList: Array<TodoListType> = [
-   { id: idTodoList1, title: 'What to learn', filter: 'all' },
-   { id: idTodoList2, title: 'What is waiting', filter: 'all' }
+   { id: idTodoList1, title: 'Developing', filter: 'all' },
+   { id: idTodoList2, title: 'Design', filter: 'all' }
 ];
-const initListTasks:ListTodoListType = {
+const initListTasks:ListTasksType = {
    [idTodoList1]: [
       { id: v1(), title: 'HTML', isDone: true },
       { id: v1(), title: 'CSS', isDone: true },
@@ -46,23 +46,26 @@ const initListTasks:ListTodoListType = {
 
 function App() {
    const [listTodoList, setListTodoList] = useState<Array<TodoListType>>(initListTodoList);
-   const [tasks, setTasks] = useState<ListTodoListType>(initListTasks);
+   const [tasks, setTasks] = useState<ListTasksType>(initListTasks);
 
+   // test
    const removeTask = (idTodoList: string, idDelete: string) => {
       tasks[idTodoList] = tasks[idTodoList].filter(item => item.id !== idDelete);
       setTasks({ ...tasks });
    }
+   // test
    const addTask = (idTodoList:string, title:string) => {
       const newTask: TaskType = { id: v1(), title: title, isDone: false };
       tasks[idTodoList] = [newTask, ...tasks[idTodoList]];
       setTasks({ ...tasks });
    }
+   // test
    const changeStatus = (idTodoList:string, id:string, isDone:boolean) => {
       const findTask = tasks[idTodoList].find(task => task.id === id);
       if (findTask) findTask.isDone = isDone;
       setTasks({ ...tasks });
    }
-
+   // test
    const changeValue = (idTodoList: string, id: string, value: string) => {
       const findTask = tasks[idTodoList].find(task => task.id === id);
       if (findTask) findTask.title = value;

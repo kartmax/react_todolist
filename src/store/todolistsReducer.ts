@@ -1,8 +1,6 @@
 import { TodoListType, FilterValueType } from "../App";
 import { v1 } from "uuid";
 
-export type ValueActionType = 'DELETE' | 'CHANGE-TITLE' | 'ADD-TODO-LIST' | 'CHANGE-FILTER';
-
 type ActionDeleteType = {
    type : 'DELETE'
    id: string
