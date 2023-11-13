@@ -41,7 +41,7 @@ function TodoList(props: PropsType) {
       changeTitleTodoList
    } = props;
 
-   const listTasks = tasks.map(task => {
+   const listTasks = tasks && tasks.map(task => {
       const removeTask = () => handleDelete(idTodoList, task.id);
       const changeStatusTask = (e: ChangeEvent<HTMLInputElement>) => changeStatus(idTodoList, task.id, e.currentTarget.checked);
 
@@ -80,7 +80,7 @@ function TodoList(props: PropsType) {
                </div>
                <br />
                <AddItemForm placeholder="New task" size="small" addItemHandler={addNewTask} />
-               {listTasks.length > 0 
+               {listTasks && listTasks.length > 0 
                   ? <ul>{listTasks}</ul>
                   : <p style={{paddingLeft:'7px'}}>Not found</p>}
             </div>

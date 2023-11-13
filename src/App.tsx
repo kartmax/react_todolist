@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import './App.scss';
 import TodoList, { TaskType } from './Todolist';
 import AddItemForm from './AddItemFrom';
@@ -12,6 +12,9 @@ import '@fontsource/roboto/700.css';
 import { Container, Grid } from '@mui/material';
 import ButtonAppBar from './TopBarMenu';
 
+import todolistsReducer, { DeleteTodoListAC, ChangeTitleAC, AddTodoListAC, ChangeFilterAC } from './store/todolistsReducer';
+import tasksReducer, { DeleteTaskAC, AddTaskAC, AddTasksGroupAC, ChangeStatusTaskAC, ChangeTitleTaskAC } from './store/tasksReducer';
+
 export type FilterValueType = 'all' | 'completed' | 'active';
 export type TodoListType = {
    id: string
@@ -19,7 +22,7 @@ export type TodoListType = {
    filter: FilterValueType
 }
 export type ListTasksType = {
-   [key:string] : Array<TaskType>
+   [key: string]: Array<TaskType>
 }
 
 const idTodoList1 = v1();
@@ -29,7 +32,7 @@ const initListTodoList: Array<TodoListType> = [
    { id: idTodoList1, title: 'Developing', filter: 'all' },
    { id: idTodoList2, title: 'Design', filter: 'all' }
 ];
-const initListTasks:ListTasksType = {
+const initListTasks: ListTasksType = {
    [idTodoList1]: [
       { id: v1(), title: 'HTML', isDone: true },
       { id: v1(), title: 'CSS', isDone: true },
@@ -45,65 +48,20 @@ const initListTasks:ListTasksType = {
 }
 
 function App() {
-   const [listTodoList, setListTodoList] = useState<Array<TodoListType>>(initListTodoList);
-   const [tasks, setTasks] = useState<ListTasksType>(initListTasks);
+   const [listTodoList, dispatchTodoList] = useReducer(todolistsReducer, initListTodoList);
+   const [tasks, dispatchTasks] = useReducer(tasksReducer, initListTasks);
 
-   // test
-   const removeTask = (idTodoList: string, idDelete: string) => {
-      tasks[idTodoList] = tasks[idTodoList].filter(item => item.id !== idDelete);
-      setTasks({ ...tasks });
-   }
-   // test
-   const addTask = (idTodoList:string, title:string) => {
-      const newTask: TaskType = { id: v1(), title: title, isDone: false };
-      tasks[idTodoList] = [newTask, ...tasks[idTodoList]];
-      setTasks({ ...tasks });
-   }
-   // test
-   const changeStatus = (idTodoList:string, id:string, isDone:boolean) => {
-      const findTask = tasks[idTodoList].find(task => task.id === id);
-      if (findTask) findTask.isDone = isDone;
-      setTasks({ ...tasks });
-   }
-   // test
-   const changeValue = (idTodoList: string, id: string, value: string) => {
-      const findTask = tasks[idTodoList].find(task => task.id === id);
-      if (findTask) findTask.title = value;
-      setTasks({ ...tasks });
-   }
-
-   // test
-   const changeFilter = (idTodoList: string, valueFilter: FilterValueType) => {
-      const findTodoList = listTodoList.find(l => l.id === idTodoList);
-      if (findTodoList) {
-         findTodoList.filter = valueFilter;
-         setListTodoList([...listTodoList]);
-      }
-   }
-
-   // test
-   const deleteTodoList = (idTodoList:string) => {
-      setListTodoList(listTodoList.filter(list => list.id !== idTodoList));
-      delete tasks[idTodoList];
-      setTasks({ ...tasks });
-   }
-
-   // test
-   const changeTitleTodoList = (idTodoList:string, title:string) => {
-      const findTodoList = listTodoList.find(list => list.id === idTodoList);
-      if(findTodoList) findTodoList.title = title;
-      setListTodoList([ ...listTodoList ]);
-   }
-
-   // test
-   const addNewTodoList = (title:string) => {
-      const newTodoList:TodoListType = {
-         id: v1(),
-         title,
-         filter: 'all'
-      };
-      setListTodoList([newTodoList, ...listTodoList]);
-      setTasks({ [newTodoList.id] : [], ...tasks });
+   const removeTask = (idTodoList: string, idDelete: string) => dispatchTasks(DeleteTaskAC(idTodoList, idDelete));
+   const addTask = (idTodoList: string, title: string) => dispatchTasks(AddTaskAC(idTodoList, title));
+   const changeStatus = (idTodoList: string, id: string, isDone: boolean) => dispatchTasks(ChangeStatusTaskAC(idTodoList, id, isDone));
+   const changeValue = (idTodoList: string, id: string, value: string) => dispatchTasks(ChangeTitleTaskAC(idTodoList, id, value));
+   const changeFilter = (idTodoList: string, valueFilter: FilterValueType) => dispatchTodoList(ChangeFilterAC(idTodoList, valueFilter));
+   const deleteTodoList = (idTodoList: string) => dispatchTodoList(DeleteTodoListAC(idTodoList));
+   const changeTitleTodoList = (idTodoList: string, title: string) => dispatchTodoList(ChangeTitleAC(idTodoList, title));
+   const addNewTodoList = (title: string) => {
+      const idNewTodoList = v1();
+      dispatchTodoList(AddTodoListAC(idNewTodoList, title));
+      dispatchTasks(AddTasksGroupAC(idNewTodoList));
    }
 
    const todolists = listTodoList.map(l => {
@@ -119,7 +77,7 @@ function App() {
       }
 
       return (
-         <Grid key={l.id} item sm={6} md={4} style={{width:"100%"}}>
+         <Grid key={l.id} item sm={6} md={4} style={{ width: "100%" }}>
             <TodoList
                idTodoList={l.id}
                title={l.title}
@@ -140,23 +98,23 @@ function App() {
 
    return (
       <>
-      <ButtonAppBar />
-      <Container fixed >
-         <div className="App">
-            <div className='form-add-new-todolist'>
-               <AddItemForm 
-                  placeholder='ADD New TodoList' 
-                  size='small' 
-                  addItemHandler={addNewTodoList}
-               />
+         <ButtonAppBar />
+         <Container fixed >
+            <div className="App">
+               <div className='form-add-new-todolist'>
+                  <AddItemForm
+                     placeholder='ADD New TodoList'
+                     size='small'
+                     addItemHandler={addNewTodoList}
+                  />
+               </div>
+               <Grid container spacing={3} rowSpacing={3}>
+                  {todolists.length > 0 ? todolists : 'Not found'}
+               </Grid>
             </div>
-            <Grid container spacing={3} rowSpacing={3}>
-               {todolists.length > 0 ? todolists : 'Not found'}
-            </Grid>
-         </div>
-      </Container>
+         </Container>
       </>
-   ) 
+   )
 }
 
 export default App;

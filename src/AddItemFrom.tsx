@@ -32,7 +32,9 @@ function AddItemForm(props: AddItemFromType) {
       setError(null);
       e.code === 'Enter' && addNewTask_CleaneTitleNewTask(title);
    };
-   const btnClickHandler = () => addNewTask_CleaneTitleNewTask(title);
+   const btnClickHandler = () => {
+      addNewTask_CleaneTitleNewTask(title);
+   } 
 
    return (
       <div>

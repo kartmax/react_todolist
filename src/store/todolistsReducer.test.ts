@@ -25,8 +25,9 @@ test('Test for CHANGE TITLE todolist', () => {
 })
 
 test('Task for ADD new todolist', () => {
+   const idNewList = v1();
    const titleNewList = 'Title New List';
-   const finishState = todolistsReducer(startState, AddTodoListAC(titleNewList));
+   const finishState = todolistsReducer(startState, AddTodoListAC(idNewList, titleNewList));
    expect(finishState[0].title).toBe(titleNewList);
    expect(finishState.length).toBe(startState.length + 1);
 })
