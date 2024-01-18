@@ -30,10 +30,10 @@ type ActionDeleteTasksGroupType = {
    idTodoList: string
 };
 export const DeleteTaskAC = (idTodoList: string, idTask: string): ActionDeleteTaskType => {
-   return {type: "DELETE-TASK", idTodoList, idTask};
+   return { type: "DELETE-TASK", idTodoList, idTask };
 };
 export const DeleteTasksGroupAC = (idTodoList: string): ActionDeleteTasksGroupType => {
-   return {type: "DELETE-TASK-GROUP", idTodoList};
+   return { type: "DELETE-TASK-GROUP", idTodoList };
 };
 
 type ActionAddTaskType = {
@@ -46,10 +46,10 @@ type ActionAddTasksGroupType = {
    idTodolist: string
 }
 export const AddTaskAC = (idTodolist: string, titleNewTask: string): ActionAddTaskType => {
-   return {type: "ADD-TASK", idTodolist, titleNewTask};
+   return { type: "ADD-TASK", idTodolist, titleNewTask };
 };
 export const AddTasksGroupAC = (idTodolist: string): ActionAddTasksGroupType => {
-   return {type: "ADD-TASK-GROUP", idTodolist};
+   return { type: "ADD-TASK-GROUP", idTodolist };
 };
 
 type ActionChangeStatusTaskType = {
@@ -59,7 +59,7 @@ type ActionChangeStatusTaskType = {
    newStatus: boolean
 };
 export const ChangeStatusTaskAC = (idTodoList: string, idTask: string, newStatus: boolean): ActionChangeStatusTaskType => {
-   return {type: 'CHANGE-STATUS-TASK', idTodoList, idTask, newStatus};
+   return { type: 'CHANGE-STATUS-TASK', idTodoList, idTask, newStatus };
 };
 
 type ActionChangeTitleTaskType = {
@@ -69,7 +69,7 @@ type ActionChangeTitleTaskType = {
    newTitle: string
 };
 export const ChangeTitleTaskAC = (idTodoList: string, idTask: string, newTitle: string): ActionChangeTitleTaskType => {
-   return {type: 'CHANGE-TITLE-TASK', idTodoList, idTask, newTitle};
+   return { type: 'CHANGE-TITLE-TASK', idTodoList, idTask, newTitle };
 };
 
 type ActionTypes = ActionDeleteTaskType | ActionDeleteTasksGroupType | ActionAddTaskType | ActionAddTasksGroupType | ActionChangeStatusTaskType | ActionChangeTitleTaskType;
@@ -88,20 +88,18 @@ const tasksReducer = (state: ListTasksType = initialState, action: ActionTypes):
          return copyStateDeleteTasksGroup;
       case "ADD-TASK":
          const copyState_ = { ...state },
-               newTask: TaskType = { id: v1(), title: action.titleNewTask, isDone: false };
-         if (copyState_[action.idTodolist]) copyState_[action.idTodolist] = [ newTask, ...copyState_[action.idTodolist] ];
+            newTask: TaskType = { id: v1(), title: action.titleNewTask, isDone: false };
+         if (copyState_[action.idTodolist]) copyState_[action.idTodolist] = [newTask, ...copyState_[action.idTodolist]];
          return copyState_;
       case 'ADD-TASK-GROUP':
-         return { [action.idTodolist] : [], ...state };
+         return { [action.idTodolist]: [], ...state };
       case 'CHANGE-STATUS-TASK':
-         const updateState = { ...state },
-               findTask = updateState[action.idTodoList].find(task => task.id === action.idTask);
-         if (findTask) findTask.isDone = action.newStatus;
+         const updateState = { ...state };
+         updateState[action.idTodoList] = updateState[action.idTodoList].map(task => task.id === action.idTask ? {...task, isDone: action.newStatus} : task);
          return updateState;
       case 'CHANGE-TITLE-TASK':
-         const updateState_ = { ...state },
-               findTask_ = updateState_[action.idTodoList].find(task => task.id === action.idTask);
-         if (findTask_) findTask_.title = action.newTitle;
+         const updateState_ = { ...state };
+         updateState_[action.idTodoList] = updateState_[action.idTodoList].map(task => task.id === action.idTask ? {...task, title: action.newTitle} : task);
          return updateState_;
       default:
          return state;

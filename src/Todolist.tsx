@@ -5,6 +5,12 @@ import EditableSpan from "./EditableSpan";
 import { Button, ButtonGroup, Checkbox, IconButton, Paper } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { useSelector } from "react-redux";
+import { AppRootStateType } from "./store/store";
+
+import { useDispatch } from "react-redux";
+import { DeleteTodoListAC, ChangeTitleAC, ChangeFilterAC } from './store/todolistsReducer';
+import { DeleteTaskAC, AddTaskAC, ChangeStatusTaskAC, ChangeTitleTaskAC, DeleteTasksGroupAC } from './store/tasksReducer';
 
 export type TaskType = {
    id: string
@@ -15,33 +21,43 @@ export type TaskType = {
 type PropsType = {
    idTodoList: string
    title: string
-   tasks: Array<TaskType>
-   handleDelete: (idTodoList: string, id: string) => void
-   handleFilter: (idTodoList: string, valueFilter: FilterValueType) => void
-   addTask: (idTodoList: string, title: string) => void
-   changeStatus: (idTodoList: string, id: string, isDone: boolean) => void
    filter: FilterValueType
-   deleteTodoList: (idTodoList: string) => void
-   changeValue: (idTodoList: string, id: string, value: string) => void
-   changeTitleTodoList: (idTodoList: string, title: string) => void
 }
 
 function TodoList(props: PropsType) {
    const {
       idTodoList,
       title,
-      tasks,
-      handleDelete,
-      handleFilter,
-      addTask,
-      changeStatus,
       filter,
-      deleteTodoList,
-      changeValue,
-      changeTitleTodoList
    } = props;
 
-   const listTasks = tasks && tasks.map(task => {
+   const dispatch = useDispatch();
+   const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[idTodoList]);
+
+   const handleDelete = (idTodoList: string, idDelete: string) => dispatch(DeleteTaskAC(idTodoList, idDelete));
+   const addTask = (idTodoList: string, title: string) => dispatch(AddTaskAC(idTodoList, title));
+   const changeStatus = (idTodoList: string, id: string, isDone: boolean) => dispatch(ChangeStatusTaskAC(idTodoList, id, isDone));
+   const changeValue = (idTodoList: string, id: string, value: string) => dispatch(ChangeTitleTaskAC(idTodoList, id, value));
+   const handleFilter = (idTodoList: string, valueFilter: FilterValueType) => dispatch(ChangeFilterAC(idTodoList, valueFilter));
+   const deleteTodoList = (idTodoList: string) => {
+      dispatch(DeleteTodoListAC(idTodoList));
+      dispatch(DeleteTasksGroupAC(idTodoList));
+   }
+   const changeTitleTodoList = (idTodoList: string, title: string) => dispatch(ChangeTitleAC(idTodoList, title));
+
+   const funcFilterTasks = (tasks:Array<TaskType>) => {
+      switch (filter) {
+         case 'completed':
+            return tasks.filter(task => task.isDone);
+         case 'active':
+            return tasks.filter(task => !task.isDone);
+         default:
+            return tasks;
+      }
+   }
+   const tasksFiltered = funcFilterTasks(tasks);
+
+   const listTasks = tasksFiltered && tasksFiltered.map(task => {
       const removeTask = () => handleDelete(idTodoList, task.id);
       const changeStatusTask = (e: ChangeEvent<HTMLInputElement>) => changeStatus(idTodoList, task.id, e.currentTarget.checked);
 
