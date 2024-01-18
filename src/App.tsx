@@ -13,7 +13,7 @@ import { Container, Grid } from '@mui/material';
 import ButtonAppBar from './TopBarMenu';
 
 import todolistsReducer, { DeleteTodoListAC, ChangeTitleAC, AddTodoListAC, ChangeFilterAC } from './store/todolistsReducer';
-import tasksReducer, { DeleteTaskAC, AddTaskAC, AddTasksGroupAC, ChangeStatusTaskAC, ChangeTitleTaskAC } from './store/tasksReducer';
+import tasksReducer, { DeleteTaskAC, AddTaskAC, AddTasksGroupAC, ChangeStatusTaskAC, ChangeTitleTaskAC, DeleteTasksGroupAC } from './store/tasksReducer';
 
 export type FilterValueType = 'all' | 'completed' | 'active';
 export type TodoListType = {
@@ -56,7 +56,10 @@ function App() {
    const changeStatus = (idTodoList: string, id: string, isDone: boolean) => dispatchTasks(ChangeStatusTaskAC(idTodoList, id, isDone));
    const changeValue = (idTodoList: string, id: string, value: string) => dispatchTasks(ChangeTitleTaskAC(idTodoList, id, value));
    const changeFilter = (idTodoList: string, valueFilter: FilterValueType) => dispatchTodoList(ChangeFilterAC(idTodoList, valueFilter));
-   const deleteTodoList = (idTodoList: string) => dispatchTodoList(DeleteTodoListAC(idTodoList));
+   const deleteTodoList = (idTodoList: string) => {
+      dispatchTodoList(DeleteTodoListAC(idTodoList));
+      dispatchTasks(DeleteTasksGroupAC(idTodoList));
+   }
    const changeTitleTodoList = (idTodoList: string, title: string) => dispatchTodoList(ChangeTitleAC(idTodoList, title));
    const addNewTodoList = (title: string) => {
       const idNewTodoList = v1();

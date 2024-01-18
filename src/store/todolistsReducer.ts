@@ -1,5 +1,4 @@
 import { TodoListType, FilterValueType } from "../App";
-import { v1 } from "uuid";
 
 type ActionDeleteType = {
    type : 'DELETE'
