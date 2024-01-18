@@ -1,4 +1,3 @@
-import { useReducer } from 'react';
 import './App.scss';
 import TodoList, { TaskType } from './Todolist';
 import AddItemForm from './AddItemFrom';
@@ -12,8 +11,13 @@ import '@fontsource/roboto/700.css';
 import { Container, Grid } from '@mui/material';
 import ButtonAppBar from './TopBarMenu';
 
-import todolistsReducer, { DeleteTodoListAC, ChangeTitleAC, AddTodoListAC, ChangeFilterAC } from './store/todolistsReducer';
-import tasksReducer, { DeleteTaskAC, AddTaskAC, AddTasksGroupAC, ChangeStatusTaskAC, ChangeTitleTaskAC, DeleteTasksGroupAC } from './store/tasksReducer';
+import { DeleteTodoListAC, ChangeTitleAC, AddTodoListAC, ChangeFilterAC } from './store/todolistsReducer';
+import { DeleteTaskAC, AddTaskAC, AddTasksGroupAC, ChangeStatusTaskAC, ChangeTitleTaskAC, DeleteTasksGroupAC } from './store/tasksReducer';
+
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { AppRootState } from './store/store';
+
 
 export type FilterValueType = 'all' | 'completed' | 'active';
 export type TodoListType = {
@@ -25,46 +29,26 @@ export type ListTasksType = {
    [key: string]: Array<TaskType>
 }
 
-const idTodoList1 = v1();
-const idTodoList2 = v1();
-
-const initListTodoList: Array<TodoListType> = [
-   { id: idTodoList1, title: 'Developing', filter: 'all' },
-   { id: idTodoList2, title: 'Design', filter: 'all' }
-];
-const initListTasks: ListTasksType = {
-   [idTodoList1]: [
-      { id: v1(), title: 'HTML', isDone: true },
-      { id: v1(), title: 'CSS', isDone: true },
-      { id: v1(), title: 'JS', isDone: true },
-      { id: v1(), title: 'React', isDone: false },
-      { id: v1(), title: 'Django', isDone: false }
-   ],
-   [idTodoList2]: [
-      { id: v1(), title: 'Figma', isDone: true },
-      { id: v1(), title: 'Sketch', isDone: false },
-      { id: v1(), title: 'Photoshop', isDone: false }
-   ],
-}
 
 function App() {
-   const [listTodoList, dispatchTodoList] = useReducer(todolistsReducer, initListTodoList);
-   const [tasks, dispatchTasks] = useReducer(tasksReducer, initListTasks);
+   const dispatch = useDispatch();
+   const listTodoList = useSelector<AppRootState, Array<TodoListType>>(state => state.todoList);
+   const tasks = useSelector<AppRootState, ListTasksType>(state => state.tasks);
 
-   const removeTask = (idTodoList: string, idDelete: string) => dispatchTasks(DeleteTaskAC(idTodoList, idDelete));
-   const addTask = (idTodoList: string, title: string) => dispatchTasks(AddTaskAC(idTodoList, title));
-   const changeStatus = (idTodoList: string, id: string, isDone: boolean) => dispatchTasks(ChangeStatusTaskAC(idTodoList, id, isDone));
-   const changeValue = (idTodoList: string, id: string, value: string) => dispatchTasks(ChangeTitleTaskAC(idTodoList, id, value));
-   const changeFilter = (idTodoList: string, valueFilter: FilterValueType) => dispatchTodoList(ChangeFilterAC(idTodoList, valueFilter));
+   const removeTask = (idTodoList: string, idDelete: string) => dispatch(DeleteTaskAC(idTodoList, idDelete));
+   const addTask = (idTodoList: string, title: string) => dispatch(AddTaskAC(idTodoList, title));
+   const changeStatus = (idTodoList: string, id: string, isDone: boolean) => dispatch(ChangeStatusTaskAC(idTodoList, id, isDone));
+   const changeValue = (idTodoList: string, id: string, value: string) => dispatch(ChangeTitleTaskAC(idTodoList, id, value));
+   const changeFilter = (idTodoList: string, valueFilter: FilterValueType) => dispatch(ChangeFilterAC(idTodoList, valueFilter));
    const deleteTodoList = (idTodoList: string) => {
-      dispatchTodoList(DeleteTodoListAC(idTodoList));
-      dispatchTasks(DeleteTasksGroupAC(idTodoList));
+      dispatch(DeleteTodoListAC(idTodoList));
+      dispatch(DeleteTasksGroupAC(idTodoList));
    }
-   const changeTitleTodoList = (idTodoList: string, title: string) => dispatchTodoList(ChangeTitleAC(idTodoList, title));
+   const changeTitleTodoList = (idTodoList: string, title: string) => dispatch(ChangeTitleAC(idTodoList, title));
    const addNewTodoList = (title: string) => {
       const idNewTodoList = v1();
-      dispatchTodoList(AddTodoListAC(idNewTodoList, title));
-      dispatchTasks(AddTasksGroupAC(idNewTodoList));
+      dispatch(AddTodoListAC(idNewTodoList, title));
+      dispatch(AddTasksGroupAC(idNewTodoList));
    }
 
    const todolists = listTodoList.map(l => {
@@ -111,7 +95,7 @@ function App() {
                      addItemHandler={addNewTodoList}
                   />
                </div>
-               <Grid container spacing={3} rowSpacing={3}>
+               <Grid container spacing={3} rowSpacing={3} paddingBottom={6}>
                   {todolists.length > 0 ? todolists : 'Not found'}
                </Grid>
             </div>

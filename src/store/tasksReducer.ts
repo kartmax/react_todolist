@@ -1,6 +1,24 @@
 import { TaskType } from './../Todolist';
 import { ListTasksType } from "../App";
 import { v1 } from 'uuid';
+import { idTodoList1, idTodoList2 } from './todolistsReducer';
+
+
+const initialState: ListTasksType = {
+   [idTodoList1]: [
+      { id: v1(), title: 'HTML', isDone: true },
+      { id: v1(), title: 'CSS', isDone: true },
+      { id: v1(), title: 'JS', isDone: true },
+      { id: v1(), title: 'React', isDone: false },
+      { id: v1(), title: 'Django', isDone: false }
+   ],
+   [idTodoList2]: [
+      { id: v1(), title: 'Figma', isDone: true },
+      { id: v1(), title: 'Sketch', isDone: false },
+      { id: v1(), title: 'Photoshop', isDone: false }
+   ],
+}
+
 
 type ActionDeleteTaskType = {
    type: 'DELETE-TASK'
@@ -56,7 +74,9 @@ export const ChangeTitleTaskAC = (idTodoList: string, idTask: string, newTitle: 
 
 type ActionTypes = ActionDeleteTaskType | ActionDeleteTasksGroupType | ActionAddTaskType | ActionAddTasksGroupType | ActionChangeStatusTaskType | ActionChangeTitleTaskType;
 
-const tasksReducer = (state: ListTasksType, action: ActionTypes): ListTasksType => {
+
+
+const tasksReducer = (state: ListTasksType = initialState, action: ActionTypes): ListTasksType => {
    switch (action.type) {
       case "DELETE-TASK":
          const copyState = { ...state };
@@ -84,7 +104,7 @@ const tasksReducer = (state: ListTasksType, action: ActionTypes): ListTasksType 
          if (findTask_) findTask_.title = action.newTitle;
          return updateState_;
       default:
-         throw new Error('I do not know this action type');
+         return state;
    }
 }
 

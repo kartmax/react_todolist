@@ -1,4 +1,14 @@
+import { v1 } from "uuid";
 import { TodoListType, FilterValueType } from "../App";
+
+export const idTodoList1 = v1();
+export const idTodoList2 = v1();
+
+const initialState: Array<TodoListType> = [
+   { id: idTodoList1, title: 'Developing', filter: 'all' },
+   { id: idTodoList2, title: 'Design', filter: 'all' }
+];
+
 
 type ActionDeleteType = {
    type : 'DELETE'
@@ -34,7 +44,8 @@ export const ChangeFilterAC = (id: string, filter: FilterValueType): ActionChang
    return {type : 'CHANGE-FILTER', id, filter};
 };
 
-const todolistsReducer = (state:Array<TodoListType>, action: ActionsType):Array<TodoListType> => {
+
+const todolistsReducer = (state:Array<TodoListType> = initialState, action: ActionsType):Array<TodoListType> => {
    switch (action.type) {
       case 'DELETE':
          return state.filter(todolist => todolist.id !== action.id);
@@ -56,7 +67,7 @@ const todolistsReducer = (state:Array<TodoListType>, action: ActionsType):Array<
          if (findTodoList_) findTodoList_.filter = action.filter;
          return copyState_;
       default:
-         throw new Error('I do not khow this value type - ');
+         return state;
    }
 }
 
