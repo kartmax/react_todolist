@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/react_todolist/static/css/main.92c4ab92.css",
-    "main.js": "/react_todolist/static/js/main.699fd485.js",
+    "main.js": "/react_todolist/static/js/main.126d2682.js",
     "static/js/787.41c59b1d.chunk.js": "/react_todolist/static/js/787.41c59b1d.chunk.js",
     "static/media/roboto-latin-500-normal.woff2": "/react_todolist/static/media/roboto-latin-500-normal.f25d774ecfe0996f8eb5.woff2",
     "static/media/roboto-latin-700-normal.woff2": "/react_todolist/static/media/roboto-latin-700-normal.227c93190fe7f82de3f8.woff2",
@@ -61,11 +61,11 @@
     "static/media/roboto-greek-ext-700-normal.woff": "/react_todolist/static/media/roboto-greek-ext-700-normal.249853776d22a271b2b5.woff",
     "index.html": "/react_todolist/index.html",
     "main.92c4ab92.css.map": "/react_todolist/static/css/main.92c4ab92.css.map",
-    "main.699fd485.js.map": "/react_todolist/static/js/main.699fd485.js.map",
+    "main.126d2682.js.map": "/react_todolist/static/js/main.126d2682.js.map",
     "787.41c59b1d.chunk.js.map": "/react_todolist/static/js/787.41c59b1d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.92c4ab92.css",
-    "static/js/main.699fd485.js"
+    "static/js/main.126d2682.js"
   ]
 }
